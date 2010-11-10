@@ -20,8 +20,8 @@
 			
 			// SORTERINGSALGORITME (HOT) - kan justeres.
 			function hotSort($a, $b) {
-				$aHeat = ($a->date - 1289000000) * 0.001 * $a->score;
-				$bHeat = ($b->date - 1289000000) * 0.001 * $b->score;
+				$aHeat = ($a->score / (time() - $a->date)) * 1e7;
+				$bHeat = ($b->score / (time() - $b->date)) * 1e7;
 				if ($aHeat > $bHeat)
 					return -1;
 				if ($aHeat < $bHeat)
@@ -50,6 +50,12 @@
 			// vis ressurser
 			foreach ($resources as $res)
 				$res->display();
+			
+			if ($from >= 20)
+				echo '<a class="left" href="index.php?start='.($from - 20).'">forrige 20</a>';
+			
+			if (($resources.length - $from) > 20)
+				echo '<a class="left" href="index.php?start='.($from + 20).'">neste 20</a>';				
 		?>
 	</section>
 	<aside>

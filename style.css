@@ -69,7 +69,7 @@ h3 {
 
 h4 {
 	font-size: 1.2em;
-	margin: 1em 0 0;
+	margin: 1em 0 0.5em;
 }
 
 header {
@@ -184,10 +184,22 @@ sup {
 }
 
 .vote {
-	width: 8%;	
+	width: 10%;	
 	float: left;
 	padding: 0.5em 1em;
 	text-align: center;
+}
+
+.vote h3 {
+	margin: 0.5em 0 0.1em;	
+}
+
+.points {
+	margin-top: 0.2em;
+}
+
+.date {
+	font-size: 0.8em;
 }
 
 .data {

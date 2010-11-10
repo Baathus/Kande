@@ -17,7 +17,8 @@
 					$taglinks = '';
 					echo '<p>';
 					foreach ($tags as $n => $tag) {
-						echo '<input type="checkbox" name="tags['.$n.']" value="'.$tag.'">'.$tag.'</input>';
+						echo '<input type="checkbox" name="tags[]" value="'.$tag.'" />'.$tag;
+						// legg gjerne inn en endring for å unngå break mellom checkbox og tagnavn her
 						if ($n < count($tags)-1)
 							echo ' ';
 					}

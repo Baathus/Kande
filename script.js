@@ -79,3 +79,7 @@ function checkFields() {
 function checkTags() {
 	// sammenlikn innhold i id="tags" med database av tags
 }
+
+function addTag(tag) {
+	document.getElementById('tags').value += tag+', ';
+}
