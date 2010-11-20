@@ -9,10 +9,9 @@ class ResourceClass {
 	public $score;
 	public $date;
 	public $owner;
-	public $comments = array();
 	
-	// kun navn, url og beskrivelse er n�dvendig
-	function __construct($i=0, $n, $u, $d, $t=array(), $s=1, $dt=0, $o=null, $c=array()) {
+	// kun id, navn, url og beskrivelse er nødvendig. id kan settes til 0 eller hva som helst om dette er en ny ressurs.
+	function __construct($i=0, $n, $u, $d, $t=array(), $s=1, $dt=0, $o=null) {
 		$this->id = $i;
 		$this->name = (string)$n;
 		$this->url = (string)$u;
@@ -21,7 +20,6 @@ class ResourceClass {
 		$this->score = $s;
 		$this->date = $dt;
 		$this->owner = $o;
-		$this->comments = $c;
 	}
 
 	// Works out the time since the entry post, takes a an argument in unix time (seconds) 
@@ -30,8 +28,8 @@ class ResourceClass {
 	function time_since($original) {
 		// array of time period chunks
 		$chunks = array(
-			array(60 * 60 * 24 * 365 , '�r'),
-			array(60 * 60 * 24 * 30 , 'm�ned'),
+			array(60 * 60 * 24 * 365 , 'år'),
+			array(60 * 60 * 24 * 30 , 'måned'),
 			array(60 * 60 * 24 * 7, 'uke'),
 			array(60 * 60 * 24 , 'dag'),
 			array(60 * 60 , 'time'),
@@ -49,67 +47,72 @@ class ResourceClass {
 			
 			// finding the biggest chunk (if the chunk fits, break)
 			if (($count = floor($since / $seconds)) != 0) {
-				// DEBUG print "<!-- It's $name -->\n";
 				break;
 			}
 		}
 		
 		if ($count == 1) 
 			$print = '1 '.$name;
-		else if ($name == '�r') 
+		else if ($name == 'år') 
 			$print = "$count {$name}";
 		else if ($name == 'time') 
 			$print = "$count {$name}r";
 		else 
 			$print = "$count {$name}er";
-		
-		/*
-		if ($i + 1 < $j) {
-			// now getting the second item
-			$seconds2 = $chunks[$i + 1][0];
-			$name2 = $chunks[$i + 1][1];
-			
-			// add second item if it's greater than 0
-			if (($count2 = floor(($since - ($seconds * $count)) / $seconds2)) != 0) {
-				if ($count2 == 1) 
-					$print .= ',<br />1 '.$name2;
-				else if ($name2 == '�r') 
-					$print .= ",<br />$count2 {$name2}";
-				else if ($name2 == 'time') 
-					$print .= ",<br />$count2 {$name2}r";
-				else 
-					$print .= ",<br />$count2 {$name2}er";
-			}
-		}
-		*/
+
 		return $print;
+	}
+	
+	function textReplace($str) {
+		$str = preg_replace("/(\r\n|\r)/", "\n", $str); // Unix newlines
+		$nbcode = preg_match_all("/@@(.+)@@/Ums", $str, $matches_code, PREG_PATTERN_ORDER); // lagre kodestrenger
+		$str = preg_replace("/@@(.+)@@/Ums", "</p><pre><code>§§CODE§§</code></pre><p>", $str); // sett pre og code
+		$morecode = preg_match("/@@(.*?)/Ums", $str, $match_code); // lagre kodestreng for uavslutta stykker
+		$str = preg_replace("/@@(.*?)/Ums", "<pre><code>@@CODE@@</code></pre>", $str); // sett pre og code for uavslutta stykker
+		$str = preg_replace("/^([^!\*#\n][^\n]+)$/Um", "<p>$1</p>", $str); // sett paragraphs
+		$str = str_replace("<p><pre", "<pre", $str); // fjern p fra pre
+		$str = str_replace("/pre></p>", "/pre>", $str);
+		if($nbcode > 0) 
+			$str = preg_replace(array_fill(0, $nbcode, "/§§CODE§§/Us"), $matches_code[1], $str, 1); // sett tilbake kode
+		if($morecode > 0) 
+			$str = preg_replace("/@@CODE@@/Us", $match_code[1], $str); // sett tilbake kode
+		$rg_url = "[0-9a-zA-Z\.\#/~\-_%=\?\&,\+\:@;!\(\)\*\$']*"; // url'er kan bestå av disse
+		$rg_link_http = "h(ttps?://" . $rg_url . ")"; // og begynner slik
+		$str = preg_replace('#\[([^\]]+)\|' . $rg_link_http . '\]#U', '<a href="xx$2" class="url">$1</a>', $str); // lenke med lenketekst
+		$str = preg_replace('#' . $rg_link_http . '#i', '<a href="$0" class="url">xx$1</a>', $str); // ren url
+		$str = preg_replace('#xxttp#', 'http', $str); // bare fordi
+		return $str;
 	}
 	
 	function display() {
 		$taglinks = '';
 		foreach ($this->tags as $n => $tag) {
-			$taglinks = $taglinks.'<a href="search.php?q=&tags[]='.$tag.'">'.$tag.'</a>';
+			$taglinks = $taglinks.'<a class="tag" href="javascript:searchResult(searchDefault(), \'&amp;tags[]='.urlencode($tag).'\')">'.$tag.'</a>';
 			if ($n < count($this->tags)-1)
-				$taglinks = $taglinks.', ';
+				$taglinks = $taglinks.' ';
 		}
 		
-		if (count($this->comments) == 1)
-			$commentString = '1 kommentar';
-		else
-			$commentString = count($this->comments).' kommentarer';
+		include_once './db.php';
+		if (connectToDB()) {
+			if (countCommentsByRID($this->id) == 1)
+				$commentString = '1 kommentar';
+			else
+				$commentString = countCommentsByRID($this->id).' kommentarer';
+		}
 
 		echo '<div class="resource">'
 		.'<div class="vote">'
-		.'<h3>'.$this->score.'</h3>'
-		.'<p class="points">poeng</p>'
-		.'<p class="date">Alder:<br/>'.$this->time_since($this->date).'</p>'
-		.'<p><a href="upvote.php?id='.$this->id.'">Stem</a></p>'
+		.'<a href="javascript:checkLogin(\'upvote.php?id='.$this->id.'\')"><img alt="Stem opp" title="Stem opp" src="upvote.gif" style="height: 16px" /></a>' // <noscript><a href="upvote.php?id='.$this->id.'"><img alt="Stem opp" title="Stem opp" src="upvote.gif" style="height: 16px" /></a></noscript>
+		.' <span class="score" id="scoreID'.$this->id.'">'.$this->score.'</span>'
+		.' poeng, '
+		.' <span class="userdate">skrevet av <a href="user.php?uid='.urlencode($this->owner).'">'.$this->owner.'</a> for '.$this->time_since($this->date).' siden</span>'
+		.' (<a href="report.php?id='.$this->id.'">rapporter</a>)'
 		.'</div>'		//vote
 		.'<div class="data">'
 		.'<h3><a href="'.$this->url.'">'.$this->name.'</a></h3>'
-		.'<p>'.substr($this->description, 0, 150).' [...]</p>'
-		.'<p>'.$taglinks.'</p>'		
-		.'<p><a class="full" href="item.php?id='.$this->id.'">Full informasjon og '.$commentString.'</a></p>'
+		.$this->textReplace(substr($this->description, 0, 150).' ...')
+		.'<p class="full"><a href="item.php?id='.$this->id.'">Full informasjon og '.$commentString.' &raquo;</a></p>'
+		.'<p class="tags"><strong>Tags: </strong>'.$taglinks.'</p>'		
 		.'</div>'		//data
 		.'</div>';		//resource
 	}
@@ -117,38 +120,32 @@ class ResourceClass {
 	function displayFull() {
 		$taglinks = '';
 		foreach ($this->tags as $n => $tag) {
-			$taglinks = $taglinks.'<a href="search.php?q=&tags[]='.$tag.'">'.$tag.'</a>';
+			$taglinks = $taglinks.'<a class="tag" href="javascript:searchResult(searchDefault(), \'&amp;tags[]='.urlencode($tag).'\')">'.$tag.'</a>';
 			if ($n < count($this->tags)-1)
-				$taglinks = $taglinks.', ';
+				$taglinks = $taglinks.' ';
 		}
 		
-		if (count($this->comments) == 1)
-			$commentString = '1 kommentar';
-		else
-			$commentString = count($this->comments).' kommentarer';
-
-		$commentList = '';
-		foreach ($this->comments as $com)
-			$commentList = '<div class="comment"><p>'.$com.'</p></div>';
-			
 		echo '<div class="resource">'
 		.'<div class="vote">'
-		.'<h3>'.$this->score.'</h3>'
-		.'<p class="points">poeng</p>'
-		.'<p class="date">Alder:<br/>'.$this->time_since($this->date).'</p>'
-		.'<p><a href="upvote.php?id='.$this->id.'">Stem</a></p>'
+		.'<a href="javascript:checkLogin(\'upvote.php?id='.$this->id.'\')"><img alt="Stem opp" title="Stem opp" src="upvote.gif" style="height: 16px" /></a>' // <noscript><a href="upvote.php?id='.$this->id.'"><img alt="Stem opp" title="Stem opp" src="upvote.gif" style="height: 16px" /></a></noscript>
+		.' <span class="score" id="scoreID'.$this->id.'">'.$this->score.'</span>'
+		.' poeng, '
+		.' <span class="userdate">skrevet av <a href="user.php?uid='.urlencode($this->owner).'">'.$this->owner.'</a> for '.$this->time_since($this->date).' siden</span>';
+		include_once './db.php';
+		session_start();
+		if (connectToDB()) {
+			$s = verifyUser($_SESSION['name'], $_SESSION['pass'], false);
+			if (($s['user'] == $this->owner) || ($s['auth'] == 3))
+				echo ' (<a href="edit.php?id='.$this->id.'">rediger</a> | <a href="delete.php?id='.$this->id.'">slett</a>)';
+		}
+		echo ' (<a href="report.php?id='.$this->id.'">rapporter</a>)'
 		.'</div>'		//vote
 		.'<div class="data">'
 		.'<h3><a href="'.$this->url.'">'.$this->name.'</a></h3>'
-		.'<p>'.$this->description.'</p>'
-		.'<p>'.$taglinks.'</p>'
-		.'<p><a href="edit.php?id='.$this->id.'">Rediger</a></p>'
+		.$this->textReplace($this->description)
+		.'<p class="tags"><strong>Tags: </strong>'.$taglinks.'</p>'
 		.'</div>'		//data
 		.'</div>';		//resource
-		echo '<div class="comments">'
-		.'<h4>'.$commentString.'</h4>'
-		.$commentList
-		.'</div>';		//comments
 	}
 	
 }

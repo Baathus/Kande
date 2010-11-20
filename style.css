@@ -36,15 +36,15 @@ input[type="submit"], input[type="button"], button {
 
 /* start */
 html {
-	background: #fff;
+	background: #f2f2f2;
 	color: #000;
 	font-family: Arial, sans-serif;
 	font-size: 1em;
-	line-height: 1.25em;
+	line-height: 1.2em;
 }
 
 #container {
-	margin: 3em auto 1em;
+	margin: 2em auto;
 	position: relative;
 	width: 98%;
 	max-width: 60em;
@@ -53,45 +53,76 @@ html {
 h1 {
 	font-size: 6em;
 	display: inline;
-	margin: 1em 0;
+	margin: 0;
 	letter-spacing: -0.1em;
 }
 
 h2 {
 	font-size: 1.5em;
-	margin: 0.5em 0 1em;
+	margin: 0.5em 0;
 }
 
 h3 {
 	font-size: 1.5em;
-	margin: 0.5em 0;
+	margin: 0.3em 0;
 }
 
 h4 {
 	font-size: 1.2em;
-	margin: 1em 0 0.5em;
+	margin: 0.6em 0 0.4em;
 }
 
 header {
-	width: 49%;
 	float: left;
+	width: 17em;
 }
 
 nav {
-	margin: 1em 0;
+	float: left;
+	line-height: 2.4em;
+	margin: 0.5em 0;
+	width: 100%;
 }
 
-nav ul {
-	list-style: none;
-	margin: 1em 0;
-}
-
-nav ul li {
-	display: inline;
-	padding: 0.5em 2em;
+nav a {
+	font-size: 1.2em;
+	color: #fff;
+	background: #444;
+	padding: 0.3em 2.1em;
 	border: 1px solid #ccc;
-    -moz-border-radius: 5px;
-    border-radius: 5px;	
+}
+
+
+#search {
+	display: inline;
+	margin: 0;
+}
+
+#q {
+	float: right;
+	width: 15.4em;
+	margin: 0;
+	margin-top: 2px;
+	padding: 0 0.5em;
+	font-size: 1em;
+	font-weight: bold;
+	height: 1.85em;
+}
+
+#contribute {
+	font-size: 1.2em;
+	margin: 0.5em 0 1em;
+	text-align: center;
+	font-weight: bold;
+	width: 100%;
+	background: #444;
+	padding-top: 0.3em;
+	padding-bottom: 0.5em;
+	border: 1px solid #ccc;
+}
+
+#contribute a {
+	color: #fff;
 }
 
 aside#intro {
@@ -112,21 +143,17 @@ section {
 }
 
 footer {
-	color: #ccc;
-	background: #000;
-	margin: 1em 0;
-	padding: 0.5em 2em;
+	color: #fff;
+	background: #444;
+	margin: 1em 0 0;
+	padding: 0.5em 1em;
 	clear: both;
-    -moz-border-radius: 5px;
-    border-radius: 5px;	
 }
 
 .col {
 	float: left;
-	height: 8em;
 	width: 50%;
-	margin-right: 2em;
-	border-right: 1px solid #ccc;
+	margin-right: 1em;
 }
 
 p {
@@ -134,8 +161,10 @@ p {
 }
 
 a {
+	color: #e40;
 	color: #f00;
 	text-decoration: none;
+	font-weight: bold;
 }
 
 a:hover {
@@ -151,8 +180,10 @@ textarea, .textbox {
 	margin: 1em 0;
 }
 
-strong {
-	
+pre, code {
+	margin: 1em 0;
+	background: #eee;
+	overflow: auto;
 }
 
 sup {
@@ -165,55 +196,84 @@ sup {
 	margin-right: 2em;
 }
 
+.right {
+	float: right;
+}
+
 .resource {
+	margin: 0.5em 0;
+	background: #fff;
+	float: left;
+	width: 100%;
+	border: 1px solid #ccc;
+}
+
+.vote {
+	padding: 0.5em;
+}
+
+.score {
+	display: inline;
+	font-size: 1.5em;
+	font-weight: bold;
+}
+
+.data {
+	padding: 0.5em;
+	border-top: 1px dotted #ccc;
+	overflow: hidden;
+}
+
+.commentborder {
 	margin: 0.5em 0;
 	float: left;
 	width: 100%;
 	border: 1px solid #ccc;
-    -moz-border-radius: 5px;
-    border-radius: 5px;		
 }
 
 .comments {
-	margin: 0.5em 0;
-	float: left;
-	padding: 0.5em 1em;
-	border: 1px solid #ccc;
-    -moz-border-radius: 5px;
-    border-radius: 5px;		
+	background: #fff;
+	padding: 0.5em 1em;	
 }
 
-.vote {
-	width: 10%;	
-	float: left;
-	padding: 0.5em 1em;
-	text-align: center;
+.commentheader {
+	padding-bottom: 1em;
+	border-bottom: 1px dotted #ccc;
 }
 
-.vote h3 {
-	margin: 0.5em 0 0.1em;	
+.comment {
+	border-bottom: 1px dotted #ccc;
 }
 
-.points {
-	margin-top: 0.2em;
+.commentdata {
+	color: #999;
 }
 
-.date {
-	font-size: 0.8em;
+.newcomment {
+	margin-bottom: 0.5em;
 }
 
-.data {
-	float: left;
-	padding: 0.5em 1em;
-	border-left: 1px solid #ccc;
-	width: 80%;
+#fronttags {
+	float: none;
+	margin-bottom: 0.5em;
+	max-height: 7em;
+	overflow: hidden;
 }
 
-.full {
-	background: #000;
-	padding: 0.2em 0.5em;
-    -moz-border-radius: 5px;
-    border-radius: 5px;	
+.tags {
+	line-height: 1.8em;
+	margin-bottom: 0;
+}
+
+.tag {
+	color: #fff;
+	background: #444;
+	padding: 0.2em 0.4em;
+}
+
+nav a:hover, #contribute:hover, .tag:hover, #contribute a:hover {
+	background: #888;
+	text-decoration: none;
 }
 
 aside {
@@ -221,30 +281,17 @@ aside {
 	float: right;
 }
 
-#contribute {
-	margin: 0.5em 0 1em;
-	text-align: center;
-	width: 100%;
-	background: #000;
-	padding-top: 0.5em;
-	padding-bottom: 0.5em;
-    -moz-border-radius: 5px;
-    border-radius: 5px;	
-}
-
 #register {
-	position: absolute;
-	width: 42em;
+	position: fixed;
+	max-width: 42em;
 	z-index: 100;
 	display: none;
 	background: #fff;
 	padding: 2em;
-    -moz-border-radius: 5px;
-    border-radius: 5px;	
 }
 
 #register form {
-	width: 318px;
+	max-width: 318px;
 	float: left;
 }
 
@@ -259,4 +306,9 @@ aside {
 #exit {
 	clear: both;
 	float: right;
+}
+
+.user {
+	float: left;
+	padding: 0.5em 0 0.5em;
 }

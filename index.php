@@ -1,66 +1,50 @@
-<?php 
+<?php
+	session_start();
 	include './header.php';
+	include './resource.php';
+	include './db.php';
+
+	// viser mest populære tags på forsiden for filtering
+	if (connectToDB()) {
+		// hent tags
+		$tags = getAllTags();
+		$tagnames = array();
+		$tagscores = array();
+		// tags ligger som 2-dimensjonal array med tags[0] = tagnavn og array[1] = hyppighet
+		foreach ($tags as $tag) {
+			$tagnames[] = $tag[0];
+			$tagscores[] = $tag[1];
+		}
+		// sorterer tagnames etter synkende tagscores
+		array_multisort($tagscores, SORT_DESC, $tagnames);
+		// vi trenger bare de første 50
+		$tagnames = array_slice($tagnames, 0, 50);
+		echo '<div id="fronttags" class="tags">';
+		echo '<strong>Populære tags: </strong>';
+		// for hver (sorterte) tag, skriv tag
+		foreach ($tagnames as $n => $tag) {
+			echo '<a class="tag" href="javascript:searchResult(searchDefault(), \'&amp;tags[]='.urlencode($tag).'\')">'.str_replace(' ','&nbsp;',$tag).'</a>';
+			if ($n < count($tagnames)-1)
+				echo ' ';
+		}
+		echo '</div>';
+	}
 ?>
 	<section>
+		<nav>
+			<a href="index.php?sort=hot" title="Sorterer etter en kombinasjon av alder og poeng">Heiteste</a> <a href="index.php?sort=new" title="Sorterer etter alder">Nyeste</a> <a href="index.php?sort=score" title="Sorterer etter poeng">Beste</a> <form id="search" action="index.php" method="get"><input class="textbox" type="text" name="q" id="q" value="Søk..." onkeyup="searchResult(this.value, '')" onfocus="this.value = ''" onblur="if (this.value == '') this.value = 'Søk...'" title="Skriv inn søkeord for å finne ressurser eller tags" /></form>
+		</nav>
+		<div id="results">
 		<?php 
-			include './resource.php';
-			include './db.php';
-			
-			// se etter getdata for sortering
-			if (isset($_GET['sort']) && !empty($_GET['sort']))
-				$sort = $_GET['sort'];
-			else
-				$sort = 'hot';
-			
-			// se etter start for listing (starter ellers fra 0 og viser 20 ressurser)
-			if (isset($_GET['from']) && !empty($_GET['from']))
-				$from = $_GET['from'];
-			else
-				$from = 0;
-			
-			// SORTERINGSALGORITME (HOT) - kan justeres.
-			function hotSort($a, $b) {
-				$aHeat = ($a->score / (time() - $a->date)) * 1e7;
-				$bHeat = ($b->score / (time() - $b->date)) * 1e7;
-				if ($aHeat > $bHeat)
-					return -1;
-				if ($aHeat < $bHeat)
-					return 1;
-				return 0;
-				}
-			
-			// sorter etter dato og score
-			if ($sort == 'hot')
-				if (connectToDB()) {
-					// starter fra ?start= og gir de 20 neste
-					$resources = getResources($from, 20, 'rating', false, null);
-					usort($resources, 'hotSort');  // refererer til sorteringsalgoritme
-				}
-			
-			// sorter etter dato
-			if ($sort == 'new')
-				if (connectToDB())
-					$resources = getResources($from, 20, 'timecreated', false, null);
-			
-			// sorter etter score
-			if ($sort == 'score')
-				if (connectToDB())
-					$resources = getResources($from, 20, 'rating', false, null);
-			
-			// vis ressurser
-			foreach ($resources as $res)
-				$res->display();
-			
-			if ($from >= 20)
-				echo '<a class="left" href="index.php?start='.($from - 20).'">forrige 20</a>';
-			
-			if (($resources.length - $from) > 20)
-				echo '<a class="left" href="index.php?start='.($from + 20).'">neste 20</a>';				
+			// livesearch inneholder visning av ressurser etter sortering, tags og søkestreng
+			include './livesearch.php';
 		?>
+		</div>
 	</section>
 	<aside>
-		<div id="contribute"><a href="edit.php">Legg til en ressurs</a></div>
-		<p><strong>Kande</strong> hjelper deg å finne de beste tekniske ressursene innen programmering, nettutvikling og beslektede fag.</p>
+		<div id="contribute" title="...eller still et spørsmål!"><script>document.write('<a href="javascript:checkLogin(\'edit.php\')">Legg til en ressurs</a>');</script><noscript><a href="edit.php">Legg til en ressurs</a></noscript></div>
+		<?php include './usermeta.php'; ?>
+		<p><strong>Kande</strong> hjelper deg å finne de beste nettbaserte ressursene innen programmering, nettutvikling og beslektede fag.</p>
 		<p><strong>Del</strong> dine beste <strong>kilder</strong>, eller egen <strong>kode</strong> som andre kan bruke. Still <strong>spørsmål</strong> og få <strong>svar</strong>. Kande-samfunnet stemmer fram de beste bidragene og diskuterer muligheter.</p>
 	</aside>
 <?php 

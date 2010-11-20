@@ -2,57 +2,60 @@
 	include './header.php';
 ?>
 	<section>
-		<?php 
+		<?php
 			include './resource.php';
 			include './db.php';
-
-			// hvis vi har getdata med direkte identifikasjon av ressurs 
-			if (isset($_GET['id']) && !empty($_GET['id']))
-				$id = $_GET['id'];
-			
-			// har vi postdata fra edit-skjermen?
-			if (isset($_POST['name']) && !empty($_POST['name']) && 
-				isset($_POST['desc']) && !empty($_POST['desc']) &&
-				isset($_POST['tags']) && !empty($_POST['tags'])) {
-				// skriv tags, separert av komma, mellomrom til array
-				$tags = explode(',', $_POST['tags']);
-				foreach ($tags as $n => $tag)
-					$tags[$n] = trim($tag);
-					// fjern mellomrom før og etter
-
-				if (connectToDB())
-					// hvis vi har getdata OG har postdata kommer vi fra redigering av eksisterende ressurs
-					if (isset($id)) {
-						$res = getResourceByID($id);
-						$res->name = $_POST['name'];
-						$res->url = $_POST['url'];
-						$res->description = $_POST['desc'];
-						$res->tags = $tags;
-						modifyResourceByID($id, $res);
-					} else {
-						// opprett objekt					
-						$res = new ResourceClass(0, $_POST['name'], $_POST['url'], $_POST['desc'], $tags);					
-						// skriv ressurs til database, få id i retur
-						$id = addResource($res);
-						// hvis ingen url er satt, sett url direkte til ressursvisning og skriv modifisert objekt til database
-						if (empty($_POST['url'])) {
-							$res = getResourceByID($id);
-							$res->url = 'item.php?id='.$id;
-							modifyResourceByID($id, $res);
-						}
-					}
-			}
 			
 			// hvis vi har en id, vis ressurs
-			if (isset($id))
+			if (isset($_GET['id']) && !empty($_GET['id']))
 				if (connectToDB()) {
-					$res = getResourceByID($id);
+					$res = getResourceByID($_GET['id']);
 					$res->displayFull();
+					if (countCommentsByRID($res->id) == 1)
+						$commentString = '1 kommentar';
+					else
+						$commentString = countCommentsByRID($res->id).' kommentarer';
+
+					$comments = getCommentsByRID($res->id, 0, 1000, true);
+					$commentList = '';
+					foreach ($comments as $com) {
+						$commentList .= '<div class="comment"><div class="commentdata"><p><a href="user.php?uid='.urlencode($com['uid']).'">'.$com['uid'].'</a> for '.$res->time_since($com['timecreated']).' siden:';
+						session_start();
+						$s = verifyUser($_SESSION['name'], $_SESSION['pass'], false);
+						if (($s['user'] == $com['uid']) || ($s['auth'] == 3))
+							$commentList .= ' (<a href="item.php?id='.$res->id.'&cid='.$com['cid'].'">rediger</a> | <a href="delete.php?cid='.$com['cid'].'">slett</a>)';
+						$commentList .= '</p></div><div class="commentcontent">'.$res->textReplace($com['comment']).'</div></div>';
+					}
+					
+					$edit = '';
+					$add = '';
+					if (isset($_GET['cid']) && !empty($_GET['cid']) && !empty($_SESSION['name']) && !empty($_SESSION['pass'])) {
+						$s = verifyUser($_SESSION['name'], $_SESSION['pass'], false);
+						$c = getCommentByCID($_GET['cid']);
+						if (($_SESSION['name'] == $c['uid']) || ($s['auth'] == 3)) {
+							$edit = $c['comment'];
+							$add = '&cid='.$c['cid'];
+						}
+					}
+						
+					echo '<div class="commentborder">'
+					.'<div class="comments">'
+					.'<h4 class="commentheader">'.$commentString.'</h4>'
+					.$commentList
+					.'<form class="newcomment" action="comment.php?rid='.$res->id.$add.'" method="post">'
+					.'<h4>Legg inn en kommentar</h4>'
+					.'<textarea name="comment" rows="10">'.$edit.'</textarea>'
+					.'<input type="submit" value="Svar" />'
+					.'</form>'
+					.'</div>'		//comments
+					.'</div>';		//commentborder
 				}
 		?>
 	</section>
 	<aside>
-		<p>Hvis du har tips eller tilføyelser, legg inn en kommentar under.</p>
+		<div id="contribute"><script>document.write('<a href="javascript:checkLogin(\'edit.php\')">Legg til en ressurs</a>');</script><noscript><a href="edit.php">Legg til en ressurs</a></noscript></div>
+		<?php include './usermeta.php'; ?>
+		<p>Hvis du har svar, tips eller tilføyelser, legg inn en kommentar under.</p>
 	</aside>
 <?php 
 	include './footer.php';
