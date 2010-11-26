@@ -21,8 +21,10 @@
 				session_start();
 				$_SESSION['name'] = $name;
 				$_SESSION['pass'] = $pass;
-				echo '<script>eval(\'loggedIn = true\')</script>';
-				header('Location:'.$_SERVER['HTTP_REFERER']);
+				if ($_GET['intent'] == 'edit.php')
+					header('Location:edit.php');
+				else 
+					header('Location:'.$_SERVER['HTTP_REFERER']);
 			}
 		}
 	

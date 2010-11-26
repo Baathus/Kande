@@ -1,6 +1,8 @@
 <?php 
 	include './header.php';
 ?>
+	<a class="skiplink" href="#userdata" accesskey="3">Hopp til innlogging</a>
+	<hr/>
 	<section>
 		<?php
 			include './resource.php';
@@ -24,7 +26,7 @@
 						$s = verifyUser($_SESSION['name'], $_SESSION['pass'], false);
 						if (($s['user'] == $com['uid']) || ($s['auth'] == 3))
 							$commentList .= ' (<a href="item.php?id='.$res->id.'&cid='.$com['cid'].'">rediger</a> | <a href="delete.php?cid='.$com['cid'].'">slett</a>)';
-						$commentList .= '</p></div><div class="commentcontent">'.$res->textReplace($com['comment']).'</div></div>';
+						$commentList .= '</p></div><div class="commentcontent">'.$res->textReplace($com['comment']).'</div></div><hr/>';
 					}
 					
 					$edit = '';
@@ -48,13 +50,15 @@
 					.'<input type="submit" value="Svar" />'
 					.'</form>'
 					.'</div>'		//comments
-					.'</div>';		//commentborder
+					.'</div>'		//commentborder
+					.'<hr/>';
 				}
 		?>
 	</section>
 	<aside>
 		<div id="contribute"><script>document.write('<a href="javascript:checkLogin(\'edit.php\')">Legg til en ressurs</a>');</script><noscript><a href="edit.php">Legg til en ressurs</a></noscript></div>
 		<?php include './usermeta.php'; ?>
+		<hr/>
 		<p>Hvis du har svar, tips eller tilføyelser, legg inn en kommentar under.</p>
 	</aside>
 <?php 

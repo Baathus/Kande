@@ -43,6 +43,8 @@
 					modifyResourceByID($id, $res);
 				}
 			}
+		
+		include_once './rss.php';
 	}
 	header('Location:item.php?id='.$id);
 ?>

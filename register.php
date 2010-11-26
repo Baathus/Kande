@@ -1,7 +1,6 @@
 <meta charset="utf-8">
 <?php
 	require './db.php';
-	
 	require_once('recaptchalib.php');
 	$privatekey = "";
 	$resp = recaptcha_check_answer ($privatekey,
@@ -33,7 +32,10 @@
 					session_start();
 					$_SESSION['name'] = $name;
 					$_SESSION['pass'] = $pass;
-					header('Location:'.$_SERVER['HTTP_REFERER']);
+					if ($_GET['intent'] == 'edit.php')
+						header('Location:edit.php');
+					else 
+						header('Location:'.$_SERVER['HTTP_REFERER']);
 					echo 'loggedIn = true';
 				}
 			}

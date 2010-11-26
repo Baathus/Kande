@@ -1,6 +1,8 @@
 <?php 
 	include './header.php';
 ?>
+	<a class="skiplink" href="#userdata" accesskey="3">Hopp til innlogging</a>
+	<hr/>
 	<section>
 		<?php
 			session_start();
@@ -28,7 +30,7 @@
 					}
 					echo '<h3 class="commentheader">'.countCommentsByUID($_GET['uid']).' kommentarer av '.$_GET['uid'].'</h3>';
 					echo $commentList;
-					echo '</div>';
+					echo '</div><hr/>';
 				}
 		?>
 	</section>

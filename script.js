@@ -1,5 +1,7 @@
 var RecaptchaOptions = {theme: 'white',	tabindex: 2};
 
+// AJAX-funksjoner bruker ajax.js!!
+
 function checkLogin(intent) {
 	func = function(data) {
 		if (data == 'ok') {
@@ -13,8 +15,10 @@ function checkLogin(intent) {
 		} else  {
 			// gjør skjermen mørk og vis registreringsskjerm
 			grayOut(true);
-			var register = $('register');
-			register.style.display = 'block'; // vis registreringsskjerm
+			var regbox = $('regbox');
+			regbox.innerHTML = mini.ajax.gets('regbox.php?intent='+intent);
+			Recaptcha.create("", "recaptcha", {theme: "white", tabindex: 2, callback: Recaptcha.focus_response_field});
+			regbox.style.display = 'block'; // vis registreringsskjerm
 		}
 	}
 	mini.ajax.get('validate.php', func);
@@ -34,7 +38,7 @@ function upBoat(intent) {
 
 // skjuler/lukker registreringsskjerm
 function hide() {
-	register.style.display='none';
+	regbox.style.display='none';
 	grayOut(false);
 }
 

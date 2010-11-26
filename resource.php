@@ -112,9 +112,10 @@ class ResourceClass {
 		.'<h3><a href="'.$this->url.'">'.$this->name.'</a></h3>'
 		.$this->textReplace(substr($this->description, 0, 150).' ...')
 		.'<p class="full"><a href="item.php?id='.$this->id.'">Full informasjon og '.$commentString.' &raquo;</a></p>'
-		.'<p class="tags"><strong>Tags: </strong>'.$taglinks.'</p>'		
+		.'<p class="tags"><strong title="Tags er merkelapper som klassifiserer ressursene. Klikk på tags for å finne mer innen samme tema.">Tags: </strong>'.$taglinks.'</p>'		
 		.'</div>'		//data
-		.'</div>';		//resource
+		.'</div>'		//resource
+		.'<hr/>';
 	}
 	
 	function displayFull() {
@@ -143,9 +144,10 @@ class ResourceClass {
 		.'<div class="data">'
 		.'<h3><a href="'.$this->url.'">'.$this->name.'</a></h3>'
 		.$this->textReplace($this->description)
-		.'<p class="tags"><strong>Tags: </strong>'.$taglinks.'</p>'
+		.'<p class="tags"><strong title="Tags er merkelapper som klassifiserer ressursene. Klikk på tags for å finne mer innen samme tema.">Tags: </strong>'.$taglinks.'</p>'
 		.'</div>'		//data
-		.'</div>';		//resource
+		.'</div>'		//resource
+		.'<hr/>';
 	}
 	
 }

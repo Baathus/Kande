@@ -1,6 +1,8 @@
 <?php 
 	include './header.php';
 ?>
+	<a class="skiplink" href="#userdata" accesskey="3">Hopp til innlogging</a>
+	<hr/>
 	<section>
 		<?php
 			session_start();
@@ -56,9 +58,11 @@
 				?>
 				<p><input type="submit" value="Ferdig!" /></p>
 			</form>
+			<hr/>
 	</section>
 	<aside>
 		<?php include './usermeta.php'; ?>
+		<hr/>
 		<p>Ressursene du deler kan være alt fra nettsider med programmerings- eller designmateriale, til interessant kildekode, kodebiblioteker, eller digitale lærebøker.</p>
 		<p>En annen mulighet er å skrive inn kodeeksempler direkte, som andre kan ha nytte av. Eller du kan stille et spørsmål, og få svar fra andre brukere.</p>
 		<p>Du kan bruke visse tegn for å formattere teksten. To krøllalfa <code>@@før og etter en tekst@@</code> gir deg preformattert tekst, kjekt for å skrive inn kodeeksempler. URL'er som begynner med <code>http://</code> eller <code>https://</code> blir automatisk til lenker, eller du kan skrive <code>[Lenketekst|http://url]</code> for å lage lenker med en annen tekst.</p>
