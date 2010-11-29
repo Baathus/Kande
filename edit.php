@@ -16,10 +16,10 @@
 			
 		?>
 			<h3>Legg inn en ny ressurs</h3>
-			<form class="newresource" action="newitem.php<?php if (isset($res->id)) echo '?id='.$res->id; ?>" onsubmit="return checkFields(this)" method="post">
+			<form class="newresource" action="newitem.php<?php if (isset($res->id)) echo '?id='.$res->id; ?>" onsubmit="return checkFields(this)" method="post"> <?php // hvis javascript, sjekkes dette skjemaet før submit ?>
 				<h4>Tittel</h4>
 				<span id="namespan">En beskrivende tittel på ditt bidrag eller din forespørsel.</span><br/>
-				<input class="textbox" type="text" id="name" name="name" value="<?php if (isset($res->name)) echo $res->name; ?>"  onkeyup="searchForTags(this.value, taglist)" maxlength="256" />
+				<input class="textbox" type="text" id="name" name="name" value="<?php if (isset($res->name)) echo $res->name; ?>" onkeyup="searchForTags(this.value, taglist)" maxlength="256" />
 				
 				<h4>URL (valgfritt)</h4>
 				<span id="urlspan">Hvis dette er en ekstern ressurs, legg inn full adresse (med http) til det du vil dele.</span><br/>

@@ -1,7 +1,6 @@
-<meta charset="utf-8">
 <?php
-	require './db.php';
-	require_once('recaptchalib.php');
+	require_once './db.php';
+	require_once 'recaptchalib.php';
 	$privatekey = "";
 	$resp = recaptcha_check_answer ($privatekey,
 									$_SERVER["REMOTE_ADDR"],
@@ -9,34 +8,34 @@
 									$_POST["recaptcha_response_field"]);
 
 	if (!$resp->is_valid) {
-		die ("reCAPTCHAen ble ikke besvart riktig. Gå tilbake og prøv igjen. ");
+		echo "$('message').innerHTML = 'CAPTCHAen ble ikke besvart riktig. Prøv igjen.'; $('message').style.color = '#d50'"; // evalueres av ajax-funksjonen når den returneres
 	} else {
 		if (isset($_POST['newusername']) && !empty($_POST['newusername']))
 			$name = $_POST['newusername'];
 		else
-			die ("Du må fylle ut et brukernavn. Gå tilbake og prøv igjen.");	
+			echo "$('message').innerHTML = 'Du må fylle inn brukernavn.'; $('message').style.color = '#d50'";
 		
 		if (isset($_POST['newpassword']) && !empty($_POST['newpassword']))
 			$pass = $_POST['newpassword'];
 		else
-			die ("Du må fylle ut et passord. Gå tilbake og prøv igjen.");
+			echo "$('message').innerHTML = 'Du må fylle inn passord.'; $('message').style.color = '#d50'";
 		
 		if (isset($name) && isset($pass)) 
 			if (connectToDB()) {
 				$ok = addUser($name, $pass, '', false);
 				if (!$ok)
-					die ("Feil ved registrering av bruker.");
+					echo "$('message').innerHTML = 'Feil ved registrering av bruker. Kanskje du vil prøve igjen?'; $('message').style.color = '#d50'";
 				else {
 					$response = verifyUser($name, $pass, false);
 					session_id($response['sessionKey']);
 					session_start();
 					$_SESSION['name'] = $name;
 					$_SESSION['pass'] = $pass;
+					// hvis brukeren ville gå til redigeringsskjerm, redirect dit, ellers tilbake til samme skjerm
 					if ($_GET['intent'] == 'edit.php')
-						header('Location:edit.php');
+						echo "window.location = 'edit.php'";
 					else 
-						header('Location:'.$_SERVER['HTTP_REFERER']);
-					echo 'loggedIn = true';
+						echo "window.location = '".$_SERVER['HTTP_REFERER']."'";
 				}
 			}
 	}

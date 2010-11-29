@@ -9,9 +9,10 @@ class ResourceClass {
 	public $score;
 	public $date;
 	public $owner;
+	public $voteips = array();
 	
 	// kun id, navn, url og beskrivelse er nødvendig. id kan settes til 0 eller hva som helst om dette er en ny ressurs.
-	function __construct($i=0, $n, $u, $d, $t=array(), $s=1, $dt=0, $o=null) {
+	function __construct($i=0, $n, $u, $d, $t=array(), $s=1, $dt=0, $o=null, $v=array()) {
 		$this->id = $i;
 		$this->name = (string)$n;
 		$this->url = (string)$u;
@@ -20,6 +21,7 @@ class ResourceClass {
 		$this->score = $s;
 		$this->date = $dt;
 		$this->owner = $o;
+		$this->voteips = $v;
 	}
 
 	// Works out the time since the entry post, takes a an argument in unix time (seconds) 
@@ -102,7 +104,7 @@ class ResourceClass {
 
 		echo '<div class="resource">'
 		.'<div class="vote">'
-		.'<a href="javascript:checkLogin(\'upvote.php?id='.$this->id.'\')"><img alt="Stem opp" title="Stem opp" src="upvote.gif" style="height: 16px" /></a>' // <noscript><a href="upvote.php?id='.$this->id.'"><img alt="Stem opp" title="Stem opp" src="upvote.gif" style="height: 16px" /></a></noscript>
+		.'<a href="javascript:upBoat(\'upvote.php?id='.$this->id.'\')"><img alt="Stem opp" title="Stem opp" src="upvote.gif" style="height: 16px" /></a>' // <noscript><a href="upvote.php?id='.$this->id.'"><img alt="Stem opp" title="Stem opp" src="upvote.gif" style="height: 16px" /></a></noscript>
 		.' <span class="score" id="scoreID'.$this->id.'">'.$this->score.'</span>'
 		.' poeng, '
 		.' <span class="userdate">skrevet av <a href="user.php?uid='.urlencode($this->owner).'">'.$this->owner.'</a> for '.$this->time_since($this->date).' siden</span>'
@@ -128,7 +130,7 @@ class ResourceClass {
 		
 		echo '<div class="resource">'
 		.'<div class="vote">'
-		.'<a href="javascript:checkLogin(\'upvote.php?id='.$this->id.'\')"><img alt="Stem opp" title="Stem opp" src="upvote.gif" style="height: 16px" /></a>' // <noscript><a href="upvote.php?id='.$this->id.'"><img alt="Stem opp" title="Stem opp" src="upvote.gif" style="height: 16px" /></a></noscript>
+		.'<a href="javascript:upBoat(\'upvote.php?id='.$this->id.'\')"><img alt="Stem opp" title="Stem opp" src="upvote.gif" style="height: 16px" /></a>' // <noscript><a href="upvote.php?id='.$this->id.'"><img alt="Stem opp" title="Stem opp" src="upvote.gif" style="height: 16px" /></a></noscript>
 		.' <span class="score" id="scoreID'.$this->id.'">'.$this->score.'</span>'
 		.' poeng, '
 		.' <span class="userdate">skrevet av <a href="user.php?uid='.urlencode($this->owner).'">'.$this->owner.'</a> for '.$this->time_since($this->date).' siden</span>';

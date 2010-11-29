@@ -2,30 +2,23 @@ var RecaptchaOptions = {theme: 'white',	tabindex: 2};
 
 // AJAX-funksjoner bruker ajax.js!!
 
+// sjekk om bruker er logget inn
 function checkLogin(intent) {
 	func = function(data) {
+		// hvis bruker er logget inn
 		if (data == 'ok') {
-			// hvis intent inneholder upvote, send intent videre til upBoat()
-			if (intent.search('upvote') > -1)
-				upBoat(intent);
 			// hvis intent er edit.php, gå dit
 			if (intent == 'edit.php')
 				window.location = intent;
-			// etc.
 		} else  {
-			// gjør skjermen mørk og vis registreringsskjerm
+			// gjør skjermen mørk og vis login/registreringsskjerm
 			grayOut(true);
-			var regbox = $('regbox');
-			regbox.innerHTML = mini.ajax.gets('regbox.php?intent='+intent);
+			$('regbox').innerHTML = mini.ajax.gets('regbox.php?intent='+intent);
 			Recaptcha.create("", "recaptcha", {theme: "white", tabindex: 2, callback: Recaptcha.focus_response_field});
-			regbox.style.display = 'block'; // vis registreringsskjerm
+			$('regbox').style.display = 'block'; // vis boksen
 		}
 	}
 	mini.ajax.get('validate.php', func);
-}
-
-function logOut() {
-	window.location = 'logout.php';
 }
 
 // AJAX-oppstemming av ressurs
@@ -38,7 +31,7 @@ function upBoat(intent) {
 
 // skjuler/lukker registreringsskjerm
 function hide() {
-	regbox.style.display='none';
+	$('regbox').style.display='none';
 	grayOut(false);
 }
 
@@ -109,35 +102,13 @@ function searchResult(str, tags) {
 	mini.ajax.get('livesearch.php?q='+str+tags, func);
 }
 
-/*
-// returnerer hele søkestrengen for tags, eks. &tags[]=PHP&tags[]=JavaScript
-function toggleSearchTags() {
-	tags = '';
-	/*nodes = $('fronttags').childNodes;
-	for (i in nodes)
-		if (nodes[i].value != undefined && nodes[i].checked != 0)
-			tags += '&tags[]='+nodes[i].value;
-	return tags;
-}
-
-// tagfiltrering for forsiden
-function toggleTag(tag) {
-	nodes = $('fronttags').childNodes;	
-	for (i in nodes)
-		if (nodes[i].innerHTML == tag)
-			if (nodes[i].style.background == 'white')
-				nodes[i].style.background = 'black';
-			else
-				nodes[i].style.background = 'white';
-}
-*/
-
+// sett tekst i søkeboks
 function searchDefault() {
 	$('q').value = 'Søk...';
 	return '';
 }
 
-// synkron uthenting av tags i form av en kommaseparert string, splitt denne i en array og returner
+// synkron (dvs. nettleseren venter på respons) uthenting av tags i form av en kommaseparert string, splitt denne i en array og returner
 function getTags() {
 	return mini.ajax.gets('gettags.php').split(',');
 }
@@ -168,7 +139,7 @@ function addTag(tag) {
 	$('tags').value += tag+', ';
 }
 
-// sjekker feltene i edit.php
+// sjekker feltene i edit.php, merker tekst som mangler i rødt
 function checkFields(form) {
 	valid = true;
 	
@@ -203,4 +174,16 @@ function checkFields(form) {
 	}
 	
 	return valid;
+}
+
+// sjekk om registreringfelter er ok, får javascript i respons som evalueres direkte
+function checkRegStatus(form, intent) {
+	mini.ajax.submit('register.php'+intent, form);
+	return false;
+}
+
+// sjekk om loginfelter er ok, får javascript i respons som evalueres direkte
+function checkLogStatus(form, intent) {
+	mini.ajax.submit('login.php'+intent, form);
+	return false;
 }

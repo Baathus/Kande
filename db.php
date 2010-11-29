@@ -10,7 +10,7 @@ define("DB_USER","");
 
 define("DB_PASS","");
 
-define("DB_HOST","localhost");
+define("DB_HOST","");
 
 ///////////////////////////////////////////////////////////
 
@@ -39,11 +39,13 @@ function addResource($resObject)
 		`timecreated` ,
 		`rating` ,
 		`description` ,
-		`tags`
+		`tags` ,
+		`voteips`
 		)
 		VALUES (
 		NULL , '".$resObject->name."', '".$resObject->url."', '".$resObject->owner."',
-		".time()." , '".$resObject->score."', '".$resObject->description."', '".dcTagArrayToString($resObject->tags)."'
+		".time()." , '".$resObject->score."', '".$resObject->description."', '".dcSemicolonArrayToString($resObject->tags)."',
+		'".dcSemicolonArrayToString($resObject->voteips)."'
 		)";
 
 	$result = mysql_query($sql);
@@ -86,7 +88,7 @@ function getResources($startFrom, $count, $sortBy, $ascending, $tags)
 		$resArray = array();
 		
 		while($resData = mysql_fetch_row($result))
-			array_push($resArray, new ResourceClass($resData[0], $resData[1], $resData[2], $resData[6], dcTagStringToArray($resData[7]), $resData[5], $resData[4], $resData[3]));
+			array_push($resArray, new ResourceClass($resData[0], $resData[1], $resData[2], $resData[6], dcSemicolonStringToArray($resData[7]), $resData[5], $resData[4], $resData[3], dcSemicolonStringToArray($resData[8])));
 		
 		$result = $resArray;
 	}
@@ -105,7 +107,7 @@ function getResourceByID($id)
 	{
 		$resData = mysql_fetch_row($result);
 		
-		$result = new ResourceClass($resData[0], $resData[1], $resData[2], $resData[6], dcTagStringToArray($resData[7]), $resData[5], $resData[4], $resData[3]);
+		$result = new ResourceClass($resData[0], $resData[1], $resData[2], $resData[6], dcSemicolonStringToArray($resData[7]), $resData[5], $resData[4], $resData[3], dcSemicolonStringToArray($resData[8]));
 	}
 	
 	return $result;
@@ -144,7 +146,7 @@ function getResourcesByUID($uid, $startFrom, $count, $sortBy, $ascending, $tags)
 		$resArray = array();
 		
 		while($resData = mysql_fetch_row($result))
-			array_push($resArray, new ResourceClass($resData[0], $resData[1], $resData[2], $resData[6], dcTagStringToArray($resData[7]), $resData[5], $resData[4], $resData[3], null));
+			array_push($resArray, ResourceClass($resData[0], $resData[1], $resData[2], $resData[6], dcSemicolonStringToArray($resData[7]), $resData[5], $resData[4], $resData[3], dcSemicolonStringToArray($resData[8])));
 		
 		$result = $resArray;
 	}
@@ -170,7 +172,8 @@ function modifyResourceByID($id, $resObject)
 		`author` = '".$resObject->owner."',
 		`rating` = '".$resObject->score."',
 		`description` = '".$resObject->description."',
-		`tags` = '".dcTagArrayToString($resObject->tags)."' WHERE `resources`.`rid` = ".$id;
+		`tags` = '".dcSemicolonArrayToString($resObject->tags)."',
+		`voteips` = '".dcSemicolonArrayToString($resObject->voteips)."' WHERE `resources`.`rid` = ".$id;
 
 	$result = mysql_query($sql);
 	
@@ -216,7 +219,7 @@ function getAllTags()
 		$tagCount = array();
 		
 		while($resData = mysql_fetch_row($result))
-			foreach(dcTagStringToArray($resData[0]) as $tag)
+			foreach(dcSemicolonStringToArray($resData[0]) as $tag)
 				if(($i = array_search($tag, $tagArray)) === false)
 				{
 					if($tag != "")
@@ -505,13 +508,14 @@ function dcCheckAndBuildDB()
 		`timecreated` INT UNSIGNED NOT NULL ,
 		`rating` MEDIUMINT NOT NULL ,
 		`description` TEXT NOT NULL ,
-		`tags` VARCHAR( 256 ) NOT NULL
+		`tags` VARCHAR( 256 ) NOT NULL,
+		`voteips` TEXT NOT NULL
 		) ENGINE = MYISAM ";
 	
 	$result = mysql_query($sql) && $result;
 	
 	$sql = "CREATE TABLE `".DB_NAME."`.`users` (
-		`uid` VARCHAR( 32 ) NOT NULL,
+		`uid` VARCHAR( 32 ) COLLATE Latin1_General_CS_AS NOT NULL,
 		`auth` TINYINT UNSIGNED NOT NULL ,
 		`passhash` CHAR( 32 ) NOT NULL ,
 		`salt` CHAR( 16 ) NOT NULL ,
@@ -564,22 +568,22 @@ function dcAskForNewDB()
 	die();
 }
 
-function dcTagArrayToString($tagArray)
+function dcSemicolonArrayToString($scArray)
 {
-	for($i = 0; $i < count($tagArray); $i++)
-		$tagArray[$i] = str_replace(";", "<?SK$>", $tagArray[$i]);	
+	for($i = 0; $i < count($scArray); $i++)
+		$scArray[$i] = str_replace(";", "<?SK$>", $scArray[$i]);	
 	
-	return implode(";", $tagArray);
+	return implode(";", $scArray);
 }
 
-function dcTagStringToArray($tagString)
+function dcSemicolonStringToArray($scString)
 {
-	$tagArray = explode(";", $tagString);
+	$scArray = explode(";", $scString);
 	
-	for($i = 0; $i < count($tagArray); $i++)
-		$tagArray[$i] = str_replace("<?SK$>", ";", $tagArray[$i]);	
+	for($i = 0; $i < count($scArray); $i++)
+		$scArray[$i] = str_replace("<?SK$>", ";", $scArray[$i]);	
 		
-	return $tagArray;
+	return $scArray;
 }
 
 function dcRandomString($length, $complexity)

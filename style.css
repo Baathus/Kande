@@ -61,8 +61,8 @@ h1 {
 	letter-spacing: -0.1em;
 }
 
-* html h1 { letter-spacing: -9px; } /* IE6 */ 
-*:first-child+html h1 { letter-spacing: -9px; } /* IE7 */
+* html h1 { letter-spacing: -9px; } /* IE6 liker ikke em-letterspacing */ 
+*:first-child+html h1 { letter-spacing: -9px; } /* IE7 liker ikke em-letterspacing */
 
 h1 sup {
 	margin: 0;
@@ -107,7 +107,7 @@ header {
 	width: 17em;
 }
 
-a.skiplink { /* skjult utenom tastenavigasjon, tillater meg å bruke absolutter her */
+a.skiplink { /* skjult utenom tastenavigasjon, og er uansett tilgjengelighetsstøtte, tillater meg å bruke absolutter her */
 	position: absolute;
 	left: -5000px;
 	top: 5em;
@@ -351,8 +351,8 @@ aside {
 	margin-left: 2em;
 }
 
-#reg {
-	margin-top: 1em;
+#recaptcha {
+	margin-bottom: 0.5em;
 }
 
 #exit {
