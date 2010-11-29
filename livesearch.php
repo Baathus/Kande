@@ -1,7 +1,7 @@
 <?php
 	include_once './resource.php';
 	include_once './db.php';
-			
+
 	if (connectToDB()) {
 
 		// se etter getdata for tags
@@ -61,10 +61,10 @@
 			if (!empty($search)) {
 				// hvis search er i tittelen på ressurs, vis
 				if (stristr($res->name, $search) != false) // not false fordi stristr returnerer string eller false 
-					$res->display();
+					$res->display(array($search));
 				// hvis search er i beskrivelse, vis
 				else if (stristr($res->description, $search) != false)
-					$res->display();
+					$res->display(array($search));
 				// eller hvis search er i tags, vis (case-insensitive)
 				else if (in_array(strtolower($search), array_map('strtolower', $res->tags)))
 					$res->display();

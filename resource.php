@@ -86,7 +86,13 @@ class ResourceClass {
 		return $str;
 	}
 	
-	function display() {
+	function highlightWords($string, $words) {
+		foreach ($words as $word)
+			$string = str_ireplace($word, '<span class="highlight">'.$word.'</span>', $string);
+		return $string;
+	}
+	
+	function display($words = array()) {
 		$taglinks = '';
 		foreach ($this->tags as $n => $tag) {
 			$taglinks = $taglinks.'<a class="tag" href="javascript:searchResult(searchDefault(), \'&amp;tags[]='.urlencode($tag).'\')">'.$tag.'</a>';
@@ -112,7 +118,7 @@ class ResourceClass {
 		.'</div>'		//vote
 		.'<div class="data">'
 		.'<h3><a href="'.$this->url.'">'.$this->name.'</a></h3>'
-		.$this->textReplace(substr($this->description, 0, 150).' ...')
+		.$this->highlightWords($this->textReplace(substr($this->description, 0, 150).' ...'), $words)
 		.'<p class="full"><a href="item.php?id='.$this->id.'">Full informasjon og '.$commentString.' &raquo;</a></p>'
 		.'<p class="tags"><strong title="Tags er merkelapper som klassifiserer ressursene. Klikk på tags for å finne mer innen samme tema.">Tags: </strong>'.$taglinks.'</p>'		
 		.'</div>'		//data
@@ -120,7 +126,7 @@ class ResourceClass {
 		.'<hr/>';
 	}
 	
-	function displayFull() {
+	function displayFull($words = array()) {
 		$taglinks = '';
 		foreach ($this->tags as $n => $tag) {
 			$taglinks = $taglinks.'<a class="tag" href="javascript:searchResult(searchDefault(), \'&amp;tags[]='.urlencode($tag).'\')">'.$tag.'</a>';
@@ -145,7 +151,7 @@ class ResourceClass {
 		.'</div>'		//vote
 		.'<div class="data">'
 		.'<h3><a href="'.$this->url.'">'.$this->name.'</a></h3>'
-		.$this->textReplace($this->description)
+		.$this->highlightWords($this->textReplace($this->description), $words)
 		.'<p class="tags"><strong title="Tags er merkelapper som klassifiserer ressursene. Klikk på tags for å finne mer innen samme tema.">Tags: </strong>'.$taglinks.'</p>'
 		.'</div>'		//data
 		.'</div>'		//resource
