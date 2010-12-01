@@ -31,6 +31,8 @@ function connectToDB()
 // Funksjonen returnerer ressursens nye ID fra databasen.
 function addResource($resObject)
 {
+	
+	
 	$sql = "INSERT INTO `".DB_NAME."`.`resources` (
 		`rid` ,
 		`title` ,
@@ -43,7 +45,7 @@ function addResource($resObject)
 		`voteips`
 		)
 		VALUES (
-		NULL , '".$resObject->name."', '".$resObject->url."', '".$resObject->owner."',
+		NULL , '".sanitize($resObject->name)."', '".$resObject->url."', '".$resObject->owner."',
 		".time()." , '".$resObject->score."', '".$resObject->description."', '".dcSemicolonArrayToString($resObject->tags)."',
 		'".dcSemicolonArrayToString($resObject->voteips)."'
 		)";
@@ -612,6 +614,23 @@ function dcRandomString($length, $complexity)
 		$result .= $chars[mt_rand(0, count($chars)-1)];
 	
 	return $result;
+}
+
+function sanitize($data)
+{
+// remove whitespaces (not a must though)
+$data = trim($data);
+ 
+// apply stripslashes if magic_quotes_gpc is enabled
+if(get_magic_quotes_gpc())
+{
+$data = stripslashes($data);
+}
+ 
+// a mySQL connection is required before using this function
+$data = mysql_real_escape_string($data);
+ 
+return $data;
 }
 
 ?>
