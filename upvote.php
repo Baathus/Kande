@@ -52,8 +52,8 @@
  
 	if (isset($_GET['id']) && !empty($_GET['id']))
 		$id = $_GET['id'];
-	include './resource.php';
-	include './db.php';
+	include_once './resource.php';
+	include_once './db.php';
 	if (connectToDB()) {
 		$res = getResourceByID($id);
 		$vip = get_ip_address();

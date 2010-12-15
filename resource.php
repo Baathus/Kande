@@ -12,7 +12,7 @@ class ResourceClass {
 	public $voteips = array();
 	
 	// kun id, navn, url og beskrivelse er nødvendig. id kan settes til 0 eller hva som helst om dette er en ny ressurs.
-	function __construct($i=0, $n, $u, $d, $t=array(), $s=1, $dt=0, $o=null, $v=array()) {
+	function __construct($i=0, $n, $u, $d, $t=array(), $s=0, $dt=0, $o=null, $v=array()) {
 		$this->id = $i;
 		$this->name = (string)$n;
 		$this->url = (string)$u;
@@ -57,7 +57,7 @@ class ResourceClass {
 			$print = '1 '.$name;
 		else if ($name == 'år') 
 			$print = "$count {$name}";
-		else if ($name == 'time') 
+		else if ($name == 'uke' || $name == 'time') 
 			$print = "$count {$name}r";
 		else 
 			$print = "$count {$name}er";
@@ -68,9 +68,9 @@ class ResourceClass {
 	function textReplace($str) {
 		$str = preg_replace("/(\r\n|\r)/", "\n", $str); // Unix newlines
 		$nbcode = preg_match_all("/@@(.+)@@/Ums", $str, $matches_code, PREG_PATTERN_ORDER); // lagre kodestrenger
-		$str = preg_replace("/@@(.+)@@/Ums", "</p><pre><code>§§CODE§§</code></pre><p>", $str); // sett pre og code
+		$str = preg_replace("/@@(.+)@@/Ums", '</p><pre><code class="prettyprint">§§CODE§§</code></pre><p>', $str); // sett pre og code
 		$morecode = preg_match("/@@(.*?)/Ums", $str, $match_code); // lagre kodestreng for uavslutta stykker
-		$str = preg_replace("/@@(.*?)/Ums", "<pre><code>@@CODE@@</code></pre>", $str); // sett pre og code for uavslutta stykker
+		$str = preg_replace("/@@(.*?)/Ums", '<pre><code class="prettyprint">@@CODE@@</code></pre>', $str); // sett pre og code for uavslutta stykker
 		$str = preg_replace("/^([^!\*#\n][^\n]+)$/Um", "<p>$1</p>", $str); // sett paragraphs
 		$str = str_replace("<p><pre", "<pre", $str); // fjern p fra pre
 		$str = str_replace("/pre></p>", "/pre>", $str);
@@ -78,11 +78,16 @@ class ResourceClass {
 			$str = preg_replace(array_fill(0, $nbcode, "/§§CODE§§/Us"), $matches_code[1], $str, 1); // sett tilbake kode
 		if($morecode > 0) 
 			$str = preg_replace("/@@CODE@@/Us", $match_code[1], $str); // sett tilbake kode
+		$str = preg_replace('/http:\/\/([^\s\.]+).(youtube.com\/watch\?v=)([0-9a-zA-Z[:punct:]]{11}+)/', '¤¤$3¤¤', $str); // beskytt youtube-innhold fra lenkeleteren
 		$rg_url = "[0-9a-zA-Z\.\#/~\-_%=\?\&,\+\:@;!\(\)\*\$']*"; // url'er kan bestå av disse
 		$rg_link_http = "h(ttps?://" . $rg_url . ")"; // og begynner slik
 		$str = preg_replace('#\[([^\]]+)\|' . $rg_link_http . '\]#U', '<a href="xx$2" class="url">$1</a>', $str); // lenke med lenketekst
 		$str = preg_replace('#' . $rg_link_http . '#i', '<a href="$0" class="url">xx$1</a>', $str); // ren url
 		$str = preg_replace('#xxttp#', 'http', $str); // bare fordi
+		$str = preg_replace("/¤¤(.+)¤¤/Ums", '<iframe class="youtube-player" type="text/html" width="640" height="385" src="http://www.youtube.com/embed/$1" frameborder="0">
+</iframe>', $str); // sett tilbake youtube-innhold
+		$str = str_replace("<p><iframe", "<iframe", $str); // fjern p fra iframe
+		$str = str_replace("/iframe></p>", "/iframe>", $str);
 		return $str;
 	}
 	
@@ -95,7 +100,7 @@ class ResourceClass {
 	function display($words = array()) {
 		$taglinks = '';
 		foreach ($this->tags as $n => $tag) {
-			$taglinks = $taglinks.'<a class="tag" href="javascript:searchResult(searchDefault(), \'&amp;tags[]='.urlencode($tag).'\')">'.$tag.'</a>';
+			$taglinks = $taglinks.'<a class="tag" href="javascript:search(searchDefault(), \'&amp;tags[]='.urlencode($tag).'\')">'.$tag.'</a>';
 			if ($n < count($this->tags)-1)
 				$taglinks = $taglinks.' ';
 		}
@@ -113,9 +118,15 @@ class ResourceClass {
 		.'<a href="javascript:upBoat(\'upvote.php?id='.$this->id.'\')"><img alt="Stem opp" title="Stem opp" src="upvote.gif" style="height: 16px" /></a>' // <noscript><a href="upvote.php?id='.$this->id.'"><img alt="Stem opp" title="Stem opp" src="upvote.gif" style="height: 16px" /></a></noscript>
 		.' <span class="score" id="scoreID'.$this->id.'">'.$this->score.'</span>'
 		.' poeng, '
-		.' <span class="userdate">skrevet av <a href="user.php?uid='.urlencode($this->owner).'">'.$this->owner.'</a> for '.$this->time_since($this->date).' siden</span>'
-		.' (<a href="report.php?id='.$this->id.'">rapporter</a>)'
-		.'</div>'		//vote
+		.' <span class="userdate">skrevet av <a href="user.php?uid='.urlencode($this->owner).'">'.$this->owner.'</a> for '.$this->time_since($this->date).' siden</span>';
+		/*
+		include_once './db.php';
+		session_start();
+		if (connectToDB())
+			if (verifyUser($_SESSION['name'], $_SESSION['pass'], false))
+				echo ' (<a href="report.php?id='.$this->id.'">rapporter</a>)';
+		*/
+		echo '</div>'	//vote
 		.'<div class="data">'
 		.'<h3><a href="'.$this->url.'">'.$this->name.'</a></h3>'
 		.$this->highlightWords($this->textReplace(substr($this->description, 0, 150).' ...'), $words)
@@ -129,7 +140,7 @@ class ResourceClass {
 	function displayFull($words = array()) {
 		$taglinks = '';
 		foreach ($this->tags as $n => $tag) {
-			$taglinks = $taglinks.'<a class="tag" href="javascript:searchResult(searchDefault(), \'&amp;tags[]='.urlencode($tag).'\')">'.$tag.'</a>';
+			$taglinks = $taglinks.'<a class="tag" href="javascript:search(searchDefault(), \'&amp;tags[]='.urlencode($tag).'\')">'.$tag.'</a>';
 			if ($n < count($this->tags)-1)
 				$taglinks = $taglinks.' ';
 		}
@@ -146,9 +157,12 @@ class ResourceClass {
 			$s = verifyUser($_SESSION['name'], $_SESSION['pass'], false);
 			if (($s['user'] == $this->owner) || ($s['auth'] == 3))
 				echo ' (<a href="edit.php?id='.$this->id.'">rediger</a> | <a href="delete.php?id='.$this->id.'">slett</a>)';
+			/*
+			if ($s)
+				echo ' (<a href="report.php?id='.$this->id.'">rapporter</a>)';
+			*/
 		}
-		echo ' (<a href="report.php?id='.$this->id.'">rapporter</a>)'
-		.'</div>'		//vote
+		echo '</div>'	//vote
 		.'<div class="data">'
 		.'<h3><a href="'.$this->url.'">'.$this->name.'</a></h3>'
 		.$this->highlightWords($this->textReplace($this->description), $words)

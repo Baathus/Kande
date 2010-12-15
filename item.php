@@ -59,7 +59,7 @@
 		<div id="contribute"><script>document.write('<a href="javascript:checkLogin(\'edit.php\')">Legg til en ressurs</a>');</script><noscript><a href="edit.php">Legg til en ressurs</a></noscript></div>
 		<?php include './usermeta.php'; ?>
 		<hr/>
-		<p>Hvis du har svar, tips eller tilføyelser, legg inn en kommentar under.</p>
+		<p>Hvis du har et svar eller tilføyelser, legg inn en kommentar under.</p>
 	</aside>
 <?php 
 	include './footer.php';

@@ -1,4 +1,6 @@
 var RecaptchaOptions = {theme: 'white',	tabindex: 2};
+var stimer = 0;
+var ttimer = 0;
 
 // AJAX-funksjoner bruker ajax.js!!
 
@@ -13,8 +15,8 @@ function checkLogin(intent) {
 		} else  {
 			// gjør skjermen mørk og vis login/registreringsskjerm
 			grayOut(true);
-			$('regbox').innerHTML = mini.ajax.gets('regbox.php?intent='+intent);
-			Recaptcha.create("", "recaptcha", {theme: "white", tabindex: 2, callback: Recaptcha.focus_response_field});
+			$('regbox').innerHTML = mini.ajax.gets('regbox.php?intent='+intent)+'<a id="exit" href="javascript:hide()">Lukk vinduet (esc)</a>';
+			Recaptcha.create("6LfVfb4SAAAAAPFjUH67cZpQrul1Wj_gnDXJdZ2O", "recaptcha", {theme: "white", tabindex: 2, callback: Recaptcha.focus_response_field});
 			$('regbox').style.display = 'block'; // vis boksen
 		}
 	}
@@ -91,15 +93,11 @@ function grayOut(vis) {
 }
 
 // AJAX-søkefunksjon
-function searchResult(str, tags) {
-	if (str.length == 0 && tags == 0) {
-		$('results').innerHTML = '';
-		return;
-	}
+function search(query, tags) {
 	func = function(data) {
 		$('results').innerHTML = data;
-	}		
-	mini.ajax.get('livesearch.php?q='+str+tags, func);
+	}
+	mini.ajax.get('livesearch.php?q='+query+tags, func);
 }
 
 // sett tekst i søkeboks

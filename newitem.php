@@ -33,9 +33,11 @@
 				modifyResourceByID($id, $res);
 			} else {
 				// opprett objekt				
-				$res = new ResourceClass(0, $_POST['name'], $_POST['url'], $_POST['desc'], $tags, 1, 0, $_SESSION['name']);	
+				$res = new ResourceClass(0, $_POST['name'], $_POST['url'], $_POST['desc'], $tags, 0, 0, $_SESSION['name']);	
 				// skriv ressurs til database, få id i retur
 				$id = addResource($res);
+				// stem opp for ressurseier selv
+				include './upvote.php';
 				// hvis ingen url er satt, sett url direkte til ressursvisning og skriv modifisert objekt til database
 				if (empty($_POST['url'])) {
 					$res = getResourceByID($id);

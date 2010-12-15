@@ -4,7 +4,12 @@
 			<h4>Registrer deg</h4>
 			<label for="newusername">Brukernavn </label><input id="newusername" class="textbox" type="text" name="newusername" maxlength="32" tabindex="0" />
 			<label for="newpassword">Passord </label><input id="newpassword" class="textbox" type="password" name="newpassword" maxlength="32" tabindex="1" />
-			<div id="recaptcha"></div>
+			<div id="recaptcha">
+				<noscript>
+					<iframe src="http://www.google.com/recaptcha/api/noscript?k=6LfVfb4SAAAAAPFjUH67cZpQrul1Wj_gnDXJdZ2O" width="350" frameborder="0"></iframe><br>
+					<input type="hidden" name="recaptcha_response_field" value="manual_challenge">
+				</noscript>
+			</div>
 			<input type="submit" value="Registrer deg" />
 		</form>
 		<form id="login" action="login.php<?php echo '?intent='.$_GET['intent']; ?>" onsubmit="return checkLogStatus(this, '<?php echo '?intent='.$_GET['intent']; ?>')" method="post">
@@ -13,4 +18,3 @@
 			<label for="password">Passord </label><input id="password" class="textbox" type="password" name="password" maxlength="32" tabindex="4" />
 			<input type="submit" value="Logg inn" tabindex="5" />
 		</form>
-		<a id="exit" href="javascript:hide()">Lukk vinduet (esc)</a>

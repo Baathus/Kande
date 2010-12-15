@@ -25,10 +25,10 @@
 		// vi trenger bare de første 35
 		$tagnames = array_slice($tagnames, 0, 35);
 		echo '<ul id="fronttags" class="tags">';
-		echo '<strong title="Tags er merkelapper som klassifiserer ressursene. Klikk på tags for å finne mer innen samme tema.">Populære tags: </strong>';
+		echo '<li id="poptags" title="Tags er merkelapper som klassifiserer ressursene. Klikk på tags for å finne mer innen samme tema.">Populære tags: </li>';
 		// for hver (sorterte) tag, skriv tag
 		foreach ($tagnames as $n => $tag) {
-			echo '<li><a class="tag" href="javascript:searchResult(searchDefault(), \'&amp;tags[]='.urlencode($tag).'\')">'.str_replace(' ','&nbsp;',$tag).'</a></li>';
+			echo '<li><a class="tag" href="javascript:search(searchDefault(), \'&amp;tags[]='.urlencode($tag).'\')">'.str_replace(' ','&nbsp;',$tag).'</a></li>';
 			if ($n < count($tagnames)-1)
 				echo ' ';
 		}
@@ -48,8 +48,8 @@
 					<a href="index.php?sort=score">Beste</a>
 				</li>
 				<li>
-					<form action="index.php" method="get">
-						<input class="textbox" type="text" name="q" id="q" value="Søk..." onkeyup="searchResult(this.value, '')" onfocus="this.value = ''" onblur="if (this.value == '') this.value = 'Søk...'" title="Skriv inn søkeord for å finne ressurser eller tags" accesskey="4" />
+					<form name="search" action="index.php" method="get">
+						<input class="textbox" type="text" name="q" id="q" value="Søk..." onkeyup="clearTimeout(stimer);stimer = setTimeout('search(document.search.q.value, \'\')',500)" onfocus="this.value = ''" onblur="if (this.value == '') this.value = 'Søk...'" title="Skriv inn søkeord for å finne ressurser eller tags" accesskey="4" />
 					</form>
 				</li>
 			</ul>

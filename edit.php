@@ -9,11 +9,25 @@
 			include './resource.php';
 			include './db.php';
 			
-			// hvis vi har getdata med direkte identifikasjon av ressurs 
-			if (isset($_GET['id']) && !empty($_GET['id']))
-				if (connectToDB())
+			session_start();
+			if (connectToDB()) {
+				$s = verifyUser($_SESSION['name'], $_SESSION['pass'], false);
+				// hvis vi har getdata med direkte identifikasjon av ressurs, skal denne redigeres
+				if (isset($_GET['id']) && !empty($_GET['id'])) {
 					$res = getResourceByID($_GET['id']);
-			
+					// hvis ikke bruker enten er opphavsmann eller admin
+					if (($s['user'] != $res->owner) && ($s['auth'] != 3)) {
+						// send til startside og terminer
+						header('Location:.');
+						die;
+					}
+				}
+				// hvis bruker ikke er innlogget, send til starside og terminer
+				if (!$s) {
+					header('Location:.');
+					die;
+				}
+			}	
 		?>
 			<h3>Legg inn en ny ressurs</h3>
 			<form class="newresource" action="newitem.php<?php if (isset($res->id)) echo '?id='.$res->id; ?>" onsubmit="return checkFields(this)" method="post"> <?php // hvis javascript, sjekkes dette skjemaet før submit ?>
@@ -48,12 +62,14 @@
 						array_multisort($tagscores, SORT_DESC, $tagnames);
 						// vi trenger bare de første 150
 						$tagnames = array_slice($tagnames, 0, 150);
+						echo '<div class="tags">';
 						if (isset($tagnames))
 							foreach ($tagnames as $n => $tag) {
-								echo '<a href="javascript:addTag(\''.$tag.'\')">'.$tag.'</a>';
+								echo '<a class="tag" href="javascript:addTag(\''.$tag.'\')">'.$tag.'</a>';
 								if ($n < count($tagnames)-1)
-									echo ', ';
+									echo ' ';
 							}
+						echo '</div>';
 					}
 				?>
 				<p><input type="submit" value="Ferdig!" /></p>
