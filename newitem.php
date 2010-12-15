@@ -22,29 +22,36 @@
 				// aksepter tag og fjern mellomrom før og etter
 			}
 
-		if (connectToDB())
-			// hvis vi har getdata OG har postdata kommer vi fra redigering av eksisterende ressurs
-			if (isset($id)) {
-				$res = getResourceByID($id);
-				$res->name = $_POST['name'];
-				$res->url = $_POST['url'];
-				$res->description = $_POST['desc'];
-				$res->tags = $tags;
-				modifyResourceByID($id, $res);
+		if (connectToDB()) {
+			//sjekk først at bruker er innlogget
+			if (!verifyUser($_SESSION['name'], $_SESSION['pass'], false)) {
+				header('Location:.');
+				die;				
 			} else {
-				// opprett objekt				
-				$res = new ResourceClass(0, $_POST['name'], $_POST['url'], $_POST['desc'], $tags, 0, 0, $_SESSION['name']);	
-				// skriv ressurs til database, få id i retur
-				$id = addResource($res);
-				// stem opp for ressurseier selv
-				include './upvote.php';
-				// hvis ingen url er satt, sett url direkte til ressursvisning og skriv modifisert objekt til database
-				if (empty($_POST['url'])) {
+				// hvis vi har getdata OG har postdata kommer vi fra redigering av eksisterende ressurs
+				if (isset($id)) {
 					$res = getResourceByID($id);
-					$res->url = 'item.php?id='.$id;
+					$res->name = $_POST['name'];
+					$res->url = $_POST['url'];
+					$res->description = $_POST['desc'];
+					$res->tags = $tags;
 					modifyResourceByID($id, $res);
+				} else {
+					// opprett objekt				
+					$res = new ResourceClass(0, $_POST['name'], $_POST['url'], $_POST['desc'], $tags, 0, 0, $_SESSION['name']);	
+					// skriv ressurs til database, få id i retur
+					$id = addResource($res);
+					// stem opp for ressurseier selv
+					include './upvote.php';
+					// hvis ingen url er satt, sett url direkte til ressursvisning og skriv modifisert objekt til database
+					if (empty($_POST['url'])) {
+						$res = getResourceByID($id);
+						$res->url = 'item.php?id='.$id;
+						modifyResourceByID($id, $res);
+					}
 				}
 			}
+		}
 		
 		include_once './rss.php';
 	}

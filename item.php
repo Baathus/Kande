@@ -9,7 +9,7 @@
 			include './db.php';
 			
 			// hvis vi har en id, vis ressurs
-			if (isset($_GET['id']) && !empty($_GET['id']))
+			if (isset($_GET['id']) && !empty($_GET['id'])) {
 				if (connectToDB()) {
 					$res = getResourceByID($_GET['id']);
 					$res->displayFull();
@@ -29,6 +29,7 @@
 						$commentList .= '</p></div><div class="commentcontent">'.$res->textReplace($com['comment']).'</div></div><hr/>';
 					}
 					
+					// hent kommentartekst hvis vi har bedt om redigering
 					$edit = '';
 					$add = '';
 					if (isset($_GET['cid']) && !empty($_GET['cid']) && !empty($_SESSION['name']) && !empty($_SESSION['pass'])) {
@@ -44,6 +45,7 @@
 					.'<div class="comments">'
 					.'<h4 class="commentheader">'.$commentString.'</h4>'
 					.$commentList
+					// sett inn kommentartekst i kommentarboks hvis vi har bedt om redigering
 					.'<form class="newcomment" action="comment.php?rid='.$res->id.$add.'" method="post">'
 					.'<h4>Legg inn en kommentar</h4>'
 					.'<textarea name="comment" rows="10">'.$edit.'</textarea>'
@@ -53,6 +55,10 @@
 					.'</div>'		//commentborder
 					.'<hr/>';
 				}
+			} else {
+				header('Location:.');
+				die;
+			}
 		?>
 	</section>
 	<aside>

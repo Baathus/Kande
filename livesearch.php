@@ -3,7 +3,6 @@
 	include_once './db.php';
 
 	if (connectToDB()) {
-
 		// se etter getdata for tags
 		$taglist = array();
 		if (isset($_GET['tags']) && !empty($_GET['tags']))

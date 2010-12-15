@@ -98,6 +98,7 @@ function search(query, tags) {
 		$('results').innerHTML = data;
 	}
 	mini.ajax.get('livesearch.php?q='+query+tags, func);
+	return false;
 }
 
 // sett tekst i søkeboks

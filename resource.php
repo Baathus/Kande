@@ -100,7 +100,8 @@ class ResourceClass {
 	function display($words = array()) {
 		$taglinks = '';
 		foreach ($this->tags as $n => $tag) {
-			$taglinks = $taglinks.'<a class="tag" href="javascript:search(searchDefault(), \'&amp;tags[]='.urlencode($tag).'\')">'.$tag.'</a>';
+			$taglinks = $taglinks.'<a class="tag" href="index.php?tags[]='.urlencode($tag).'" onclick="search(searchDefault(), \'&amp;tags[]='.urlencode($tag).'\')">'.str_replace(' ','&nbsp;',$tag).'</a>';
+			//$taglinks = $taglinks.'<a class="tag" href="javascript:search(searchDefault(), \'&amp;tags[]='.urlencode($tag).'\')">'.$tag.'</a>';
 			if ($n < count($this->tags)-1)
 				$taglinks = $taglinks.' ';
 		}
@@ -140,7 +141,8 @@ class ResourceClass {
 	function displayFull($words = array()) {
 		$taglinks = '';
 		foreach ($this->tags as $n => $tag) {
-			$taglinks = $taglinks.'<a class="tag" href="javascript:search(searchDefault(), \'&amp;tags[]='.urlencode($tag).'\')">'.$tag.'</a>';
+			$taglinks = $taglinks.'<a class="tag" href="index.php?tags[]='.urlencode($tag).'">'.str_replace(' ','&nbsp;',$tag).'</a>';
+			//$taglinks = $taglinks.'<a class="tag" href="javascript:search(searchDefault(), \'&amp;tags[]='.urlencode($tag).'\')">'.$tag.'</a>';
 			if ($n < count($this->tags)-1)
 				$taglinks = $taglinks.' ';
 		}

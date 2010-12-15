@@ -361,6 +361,11 @@ aside {
 	float: left;
 }
 
+#error {
+	padding: 1em 0;
+	color: #d50;
+}
+
 #login {
 	margin-left: 2em;
 }
@@ -368,6 +373,11 @@ aside {
 #recaptcha {
 	margin-bottom: 0.5em;
 	max-width: 318px;
+}
+
+#recaptcha iframe {
+	margin: 0;
+	padding: 0;
 }
 
 #exit {

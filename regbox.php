@@ -6,15 +6,22 @@
 			<label for="newpassword">Passord </label><input id="newpassword" class="textbox" type="password" name="newpassword" maxlength="32" tabindex="1" />
 			<div id="recaptcha">
 				<noscript>
-					<iframe src="http://www.google.com/recaptcha/api/noscript?k=6LfVfb4SAAAAAPFjUH67cZpQrul1Wj_gnDXJdZ2O" width="350" frameborder="0"></iframe><br>
+					<iframe src="http://www.google.com/recaptcha/api/noscript?k=6LfVfb4SAAAAAPFjUH67cZpQrul1Wj_gnDXJdZ2O" width="350" height="270" frameborder="0"></iframe>
+					<textarea name="recaptcha_challenge_field" rows="2" cols="40"></textarea>
 					<input type="hidden" name="recaptcha_response_field" value="manual_challenge">
 				</noscript>
 			</div>
+			<noscript>
+				<input name="js_disabled" type="hidden" value="1">
+			</noscript>
 			<input type="submit" value="Registrer deg" />
 		</form>
 		<form id="login" action="login.php<?php echo '?intent='.$_GET['intent']; ?>" onsubmit="return checkLogStatus(this, '<?php echo '?intent='.$_GET['intent']; ?>')" method="post">
 			<h4>...eller logg inn</h4>
 			<label for="username">Brukernavn </label><input id="username" class="textbox" type="text" name="username" maxlength="32" tabindex="3" />
 			<label for="password">Passord </label><input id="password" class="textbox" type="password" name="password" maxlength="32" tabindex="4" />
+			<noscript>
+				<input name="js_disabled" type="hidden" value="1">
+			</noscript>
 			<input type="submit" value="Logg inn" tabindex="5" />
 		</form>

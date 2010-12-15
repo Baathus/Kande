@@ -28,7 +28,7 @@
 		echo '<li id="poptags" title="Tags er merkelapper som klassifiserer ressursene. Klikk på tags for å finne mer innen samme tema.">Populære tags: </li>';
 		// for hver (sorterte) tag, skriv tag
 		foreach ($tagnames as $n => $tag) {
-			echo '<li><a class="tag" href="javascript:search(searchDefault(), \'&amp;tags[]='.urlencode($tag).'\')">'.str_replace(' ','&nbsp;',$tag).'</a></li>';
+			echo '<li><script>document.write(\'<a class="tag" href="javascript:search(searchDefault(), \\\'&amp;tags[]='.urlencode($tag).'\\\')">'.str_replace(' ','&nbsp;',$tag).'</a>\');</script><noscript><a class="tag" href="index.php?tags[]='.urlencode($tag).'">'.str_replace(' ','&nbsp;',$tag).'</a></noscript></li>';
 			if ($n < count($tagnames)-1)
 				echo ' ';
 		}

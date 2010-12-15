@@ -10,7 +10,7 @@
 			include './db.php';
 	
 			// hvis vi har getdata med direkte identifikasjon av bruker 
-			if (isset($_GET['uid']) && !empty($_GET['uid']))
+			if (isset($_GET['uid']) && !empty($_GET['uid'])) {
 				if (connectToDB()) {
 					echo '<div class="user">';
 					echo '<h3>'.countResourceByUID($_GET['uid']).' innlegg av '.$_GET['uid'].'</h3>';
@@ -32,6 +32,10 @@
 					echo $commentList;
 					echo '</div><hr/>';
 				}
+			} else {
+				header('Location:.');
+				die;	
+			}
 		?>
 	</section>
 	<aside>

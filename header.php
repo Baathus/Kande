@@ -10,7 +10,7 @@
 		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 		<style>html h1 sup { font-size: 0.6em; }</style>
 	<![endif]-->
-	<link rel="stylesheet"  href="prettify.css" />
+	<link rel="stylesheet" href="prettify.css" />
 	<script src="prettify.js"></script>
 	<script src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script>
 	<script src="ajax.js">// https://github.com/seven1m/mini</script>
