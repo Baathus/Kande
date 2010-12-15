@@ -1,0 +1,399 @@
+/* reset */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, i, center, dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, audio, canvas, details, figcaption,
+figure, footer, header, hgroup, mark, menu, meter, nav,
+output, progress, section, summary, time, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-size: 100%;
+	vertical-align: baseline;
+	background: transparent;
+}
+
+article, aside, dialog, figure, footer, header, 
+hgroup, nav, section, blockquote { 
+	display: block;
+}
+
+abbr[title], dfn[title] {
+	border-bottom: 1px dotted #eee;
+	cursor:help;
+}
+
+input[type="submit"], input[type="button"], button {
+    padding: 0.2em 0.5em;
+    margin: 0;
+}
+
+/* start */
+html {
+	text-align: center;
+	background: #f2f2f2;
+	color: #000;
+	font-family: Arial, sans-serif;
+	font-size: 1em;
+	line-height: 1.2em;
+}
+
+#container {
+	text-align: left;
+	margin: 1em auto 0;
+	position: relative;
+	width: 98%;
+	max-width: 60em;
+}
+
+* html #container { width: 60em; } /* IE6 forstår ikke max-width */ 
+
+h1 {
+	margin: 0;
+	padding: 0;
+	font-size: 6em;
+	line-height: 1em;
+	display: inline;
+	letter-spacing: -0.1em;
+}
+
+* html h1 { letter-spacing: -9px; } /* IE6 liker ikke em-letterspacing */ 
+*:first-child+html h1 { letter-spacing: -9px; } /* IE7 liker heller ikke em-letterspacing */
+
+h1 sup {
+	margin: 0;
+	padding: 0;
+	line-height: 1em;
+	font-size: 0.5em;
+	vertical-align: 0.8em;
+}
+
+h2 {
+	font-size: 1.5em;
+	margin: 0 0 0.5em;
+	padding: 0;
+}
+
+h3 {
+	font-size: 1.5em;
+	margin: 0.3em 0;
+}
+
+h4 {
+	font-size: 1.2em;
+	margin: 0.6em 0 0.4em;
+}
+
+p {
+	margin: 1em 0;
+}
+
+a {
+	color: #f00;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+hr {
+	display: none;
+}
+
+header {
+	float: left;
+	width: 17em;
+}
+
+a.skiplink { /* skjult utenom tastenavigasjon, og er uansett tilgjengelighetsstøtte, tillater meg å bruke absolutter her */
+	position: absolute;
+	left: -5000px;
+	top: 5em;
+	font-size: 1.5em;
+}
+
+a.skiplink:focus, a.skiplink:active { /* synlig ved tastenavigasjon */
+	position: fixed;
+	left: auto;
+	z-index: 100;
+	background: #f2f2f2;
+	padding: 0.5em;
+	text-align: center;
+}
+
+nav {
+	float: left;
+	line-height: 2em;
+	margin: 0.5em 0;
+	width: 100%;
+	overflow: hidden;
+}
+
+nav a {
+	color: #fff;
+}
+
+ul#navul {
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+ul#navul li {
+	text-align: center;
+	display: inline;
+	white-space: nowrap;
+}
+
+ul#navul li.a {
+	font-size: 1.2em;
+	padding: 0;
+	margin-right: 0.2em;
+	float: left;
+	width: 22%;
+	background: #444;
+	border: 1px solid #ccc;
+}
+
+ul#navul li.a:hover, ul#navul li.a:focus {
+	background: #888;	
+}
+
+#search {
+	display: inline;
+}
+
+#q {
+	width: auto;
+	min-width: 3em;
+	float: right;
+	margin: 0;
+	padding: 0.5em;
+	font-size: 1em;
+	font-weight: bold;
+	height: 1em;
+	line-height: 1em;
+	border: 1px solid #ccc;
+}
+
+#contribute {
+	font-size: 1.2em;
+	margin: 0.4em 0 1em;
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+	text-align: center;
+	font-weight: bold;
+	width: 100%;
+	background: #444;
+	line-height: 0.8em;
+	border: 1px solid #ccc;
+}
+
+#contribute a {
+	color: #fff;
+}
+
+section {
+	float: left;
+	width: 75%;
+	margin-bottom: 1em;
+}
+
+footer {
+	color: #fff;
+	background: #444;
+	margin: 1em 0 0;
+	padding: 0.5em 1em;
+	clear: both;
+}
+
+footer a {
+	color: #f53;	
+}
+
+.col {
+	float: left;
+	width: 50%;
+	margin-right: 1em;
+	padding-bottom: 2em;
+}
+
+a:hover, a:focus {
+	text-decoration: underline;
+}
+
+h1 a:hover {
+	text-decoration: none;
+}
+
+textarea, .textbox {
+	width: 98%;
+	margin: 1em 0;
+}
+
+pre, code {
+	margin: 1em 0;
+	overflow: auto;
+}
+
+iframe {
+	margin: 0.5em;
+}
+
+.left {
+	float: left;
+	margin-right: 2em;
+}
+
+.right {
+	float: right;
+}
+
+.resource {
+	margin: 0.5em 0;
+	background: #fff;
+	float: left;
+	width: 100%;
+	border: 1px solid #ccc;
+}
+
+.vote {
+	padding: 0.5em;
+}
+
+.score {
+	display: inline;
+	font-size: 1.5em;
+	font-weight: bold;
+}
+
+.data {
+	padding: 0.5em;
+	border-top: 1px dotted #ccc;
+	overflow: hidden;
+}
+
+.commentborder {
+	margin: 0.5em 0;
+	float: left;
+	width: 100%;
+	border: 1px solid #ccc;
+}
+
+.comments {
+	background: #fff;
+	padding: 0.5em 1em;	
+}
+
+.commentheader {
+	padding-bottom: 1em;
+	border-bottom: 1px dotted #ccc;
+}
+
+.comment {
+	border-bottom: 1px dotted #ccc;
+}
+
+.commentdata {
+	color: #999;
+}
+
+.newcomment {
+	margin-bottom: 0.5em;
+}
+
+ul#fronttags {
+	margin-top: 0;
+	margin-bottom: 0.5em;
+	height: 7.16em;		/* dette er litt hackete */
+	overflow: hidden;	/* tags er begrenset i PHP, og vi -kan- droppe hidden */	
+	list-style: none;
+}
+
+ul#fronttags li {
+	display: inline;
+	font-weight: bold;
+}
+
+.tags {
+	line-height: 1.8em;
+	margin-bottom: 0;
+}
+
+.tag {
+	color: #fff;
+	background: #444;
+	padding: 0.2em 0.4em;
+}
+
+nav a:hover, #contribute:hover, .tag:hover, #contribute a:hover {
+	background: #888;
+	text-decoration: none;
+}
+
+aside {
+	width: 23%;
+	float: right;
+}
+
+#regbox {
+	position: fixed;
+	top: 2em;
+	max-width: 42em;
+	z-index: 100;
+	display: none;
+	background: #fff;
+	padding: 2em;
+}
+
+#regbox form {
+	max-width: 318px;
+	float: left;
+}
+
+#regscreen form {
+	max-width: 45%;
+	float: left;
+}
+
+#error {
+	padding: 1em 0;
+	color: #d50;
+}
+
+#login {
+	margin-left: 2em;
+}
+
+#recaptcha {
+	margin-bottom: 0.5em;
+	max-width: 318px;
+}
+
+#recaptcha iframe {
+	margin: 0;
+	padding: 0;
+}
+
+#exit {
+	clear: both;
+	float: right;
+}
+
+.user {
+	float: left;
+	padding: 0.5em 0 0.5em;
+}
+
+.highlight {
+	background-color: #f6ccda;
+}
+/* reset */
+/* reset */
+/* reset */
+/* TEEEST*/
