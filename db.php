@@ -45,8 +45,8 @@ function addResource($resObject)
 		`voteips`
 		)
 		VALUES (
-		NULL , '".sanitize($resObject->name)."', '".$resObject->url."', '".$resObject->owner."',
-		".time()." , '".$resObject->score."', '".$resObject->description."', '".dcSemicolonArrayToString($resObject->tags)."',
+		NULL , '".sanitize($resObject->name)."', '".sanitize($resObject->url)."', '".$resObject->owner."',
+		".time()." , '".$resObject->score."', '".sanitize($resObject->description)."', '".sanitize(dcSemicolonArrayToString($resObject->tags))."',
 		'".dcSemicolonArrayToString($resObject->voteips)."'
 		)";
 
@@ -169,12 +169,12 @@ function modifyResourceScoreByID($id, $newScore)
 // Bytter ut en eksisterende ressurs i databasen med et nytt ResourceClass-objekt.
 function modifyResourceByID($id, $resObject)
 {
-	$sql = "UPDATE `".DB_NAME."`.`resources` SET `title` = '".$resObject->name."',
-		`link` = '".$resObject->url."',
+	$sql = "UPDATE `".DB_NAME."`.`resources` SET `title` = '".sanitize($resObject->name)."',
+		`link` = '".sanitize($resObject->url)."',
 		`author` = '".$resObject->owner."',
 		`rating` = '".$resObject->score."',
-		`description` = '".$resObject->description."',
-		`tags` = '".dcSemicolonArrayToString($resObject->tags)."',
+		`description` = '".sanitize($resObject->description)."',
+		`tags` = '".sanitize(dcSemicolonArrayToString($resObject->tags))."',
 		`voteips` = '".dcSemicolonArrayToString($resObject->voteips)."' WHERE `resources`.`rid` = ".$id;
 
 	$result = mysql_query($sql);
@@ -262,7 +262,7 @@ function addUser($uid, $password, $email, $secure)
 		`email`
 		)
 		VALUES (
-		'".$uid."' , 0, '".$phash."', '".$salt."', '".$email."'
+		'".sanitize($uid)."' , 0, '".$phash."', '".$salt."', '".sanitize($email)."'
 		)";
 
 	$result = mysql_query($sql);
@@ -281,7 +281,7 @@ function addUser($uid, $password, $email, $secure)
 // > "sessionKey": En nøkkelstring som kan brukes sammen med verifySessionKey(...) for å holde folk innlogget. Kan plasseres i Cookie hvis de besøkende vil bli "husket".
 function verifyUser($uid, $password, $secure)
 {
-	$sql = "SELECT uid, auth, passhash, salt FROM `".DB_NAME."`.`users` WHERE uid = '".$uid."'";
+	$sql = "SELECT uid, auth, passhash, salt FROM `".DB_NAME."`.`users` WHERE uid = '".sanitize($uid)."'";
 	
 	$result = mysql_query($sql);
 	
@@ -305,7 +305,7 @@ function verifySessionKey($sessionKey)
 	$sessionHash = substr($sessionKey, 0, 32);
 	$uid = substr($sessionKey, 32);
 	
-	$sql = "SELECT uid, auth, passhash FROM `".DB_NAME."`.`users` WHERE uid = '".$uid."'";
+	$sql = "SELECT uid, auth, passhash FROM `".DB_NAME."`.`users` WHERE uid = '".sanitize($uid)."'";
 	
 	$resQuery = mysql_query($sql);
 	
@@ -333,7 +333,7 @@ function addComment($rid, $uid, $comment)
 		`timemodified`
 		)
 		VALUES (
-		NULL , '".$uid."', '".$rid."', '".$comment."', ".time().", 0
+		NULL , '".$uid."', '".$rid."', '".sanitize($comment)."', ".time().", 0
 		)";
 	
 	$result = mysql_query($sql);
@@ -347,7 +347,7 @@ function addComment($rid, $uid, $comment)
 // Endrer teksten i kommentaren med angitt CID.
 function modifyCommentByCID($cid, $comment)
 {
-	$sql = "UPDATE `".DB_NAME."`.`comments` SET `comment` = '".$comment."', `timemodified` = ".time()."
+	$sql = "UPDATE `".DB_NAME."`.`comments` SET `comment` = '".sanitize($comment)."', `timemodified` = ".time()."
  WHERE `cid` = ".$cid;
 
 	$result = mysql_query($sql);
